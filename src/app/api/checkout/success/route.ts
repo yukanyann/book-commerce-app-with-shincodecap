@@ -1,11 +1,12 @@
 import prisma from "@/app/lib/prisma";
+import { error } from "console";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 //購入履歴の保存
-export async function POST(request: Request, response: Response) {
+export async function POST(request: Request) {
   const { sessionId } = await request.json();
   // console.log(sessionId);
 
@@ -17,7 +18,7 @@ export async function POST(request: Request, response: Response) {
     const existingPurchase = await prisma.purchase.findFirst({
       where: {
         userId: session.client_reference_id!,
-        bookId: session.metadata?.bookId!,
+        bookId: session.metadata?.bookId,
       },
     });
 
@@ -34,7 +35,13 @@ export async function POST(request: Request, response: Response) {
       // 既に購入履歴が存在する場合の処理
       return NextResponse.json({ message: "Purchase already recorded" });
     }
-  } catch (err: any) {
-    return NextResponse.json({ message: err.message });
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ message: err.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { message: "不明なエラーが発生しました" },
+      { status: 500 }
+    );
   }
 }

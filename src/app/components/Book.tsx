@@ -89,7 +89,7 @@ const Book = ({ book, isPurchased }: BookProps) => {
         >
           <Image
             priority
-            src={book.thumnail?.url || "/default-book.png"}
+            src={book.thumnail.url}
             alt={book.title}
             width={450}
             height={350}
