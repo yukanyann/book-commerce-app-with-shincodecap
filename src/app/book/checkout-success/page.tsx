@@ -26,16 +26,13 @@ const PurchaseSuccess = () => {
           );
           const data = await response.json();
           console.log(data);
-          if (data?.purchase?.bookId) {
-            setBookUrl(data.purchase.bookId);
-          } else {
-            console.error("Error fetching data: ", data);
-          }
+          setBookUrl(data.purchase.bookId);
         } catch (error) {
-          console.error("Fetch error: ", error);
+          console.error("Error fetching data: ", error);
         }
       }
     };
+
     fetchData();
   }, []);
 
@@ -48,14 +45,16 @@ const PurchaseSuccess = () => {
         <p className="text-center text-gray-600">
           ご購入いただいた内容の詳細は、登録されたメールアドレスに送信されます。
         </p>
-        <div className="mt-6 text-center">
-          <Link
-            href={`/book/${bookUrl}`}
-            className="text-indigo-600 hover:text-indigo-800 transition duration-300"
-          >
-            購入した記事を読む
-          </Link>
-        </div>
+        {bookUrl && (
+          <div className="mt-6 text-center">
+            <Link
+              href={`/book/${bookUrl}`}
+              className="text-indigo-600 hover:text-indigo-800 transition duration-300"
+            >
+              購入した記事を読む
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

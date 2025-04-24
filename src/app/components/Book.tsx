@@ -12,13 +12,11 @@ type BookProps = {
   isPurchased: boolean;
 };
 
-const Book = ({ book }: BookProps) => {
+const Book = ({ book, isPurchased }: BookProps) => {
   const [showModal, setShowModal] = useState(false);
   const { data: session } = useSession();
   const user: any = session?.user;
   const router = useRouter();
-  console.log(user?.id);
-  console.log(book.id);
 
   const startCheckout = async () => {
     try {
@@ -45,7 +43,11 @@ const Book = ({ book }: BookProps) => {
   };
 
   const handlePurchaseClick = () => {
-    setShowModal(true);
+    if (isPurchased) {
+      alert("その商品は購入済みです。");
+    } else {
+      setShowModal(true);
+    }
   };
 
   const handleCancel = () => {
@@ -87,7 +89,7 @@ const Book = ({ book }: BookProps) => {
         >
           <Image
             priority
-            src={book.thumnail.url}
+            src={book.thumnail?.url || "/default-book.png"}
             alt={book.title}
             width={450}
             height={350}
@@ -99,7 +101,7 @@ const Book = ({ book }: BookProps) => {
             <p className="mt-2 text-md text-slate-700">値段：{book.price}円</p>
           </div>
         </a>
-        {showModal && (
+        {showModal && !isPurchased && (
           <div className="absolute top-0 left-0 right-0 bottom-0 bg-slate-900 bg-opacity-50 flex justify-center items-center modal">
             <div className="bg-white p-8 rounded-lg">
               <h3 className="text-xl mb-4">本を購入しますか？</h3>

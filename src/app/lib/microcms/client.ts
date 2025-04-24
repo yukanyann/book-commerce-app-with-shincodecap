@@ -13,3 +13,14 @@ export const getAllBooks = async () => {
 
   return allBooks;
 };
+
+export const getDetailBook = async (contentId: string) => {
+  console.log("Fetching book with ID:", contentId);
+  const detailBook = await client.getListDetail<BookType>({
+    endpoint: "bookcommerce",
+
+    contentId,
+  });
+
+  return detailBook;
+};
