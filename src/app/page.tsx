@@ -4,10 +4,8 @@ import { getServerSession } from "next-auth";
 import Book from "./components/Book";
 import { getAllBooks } from "./lib/microcms/client";
 import { nextAuthOptions } from "./lib/next-auth/options";
-import PurchaseSuccess from "./book/checkout-success/page";
 import { BookType, User } from "./types/type";
 
-// eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {
   const { contents } = await getAllBooks();
   const session = await getServerSession(nextAuthOptions);
@@ -22,9 +20,10 @@ export default async function Home() {
     );
     const purchasesData = await response.json();
     console.log(purchasesData);
-
     purchaseBookIds = Array.isArray(purchasesData)
-      ? purchasesData.map((purchaseBook: any) => purchaseBook.bookId)
+      ? purchasesData.map(
+          (purchaseBook: { bookId: string }) => purchaseBook.bookId
+        )
       : [];
   }
 
@@ -38,7 +37,16 @@ export default async function Home() {
           <Book
             key={book.id}
             book={book}
-            user={undefined}
+            user={
+              user
+                ? {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    image: user.image,
+                  }
+                : undefined
+            }
             isPurchased={purchaseBookIds?.includes(book.id)}
           />
         ))}

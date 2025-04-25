@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-// eslint-disable-next-line @next/next/no-async-client-component
 const PurchaseSuccess = () => {
   const [bookUrl, setBookUrl] = useState(null);
 
@@ -34,7 +33,7 @@ const PurchaseSuccess = () => {
     };
 
     fetchData();
-  }, []);
+  }, [sessionId]);
 
   return (
     <div className="flex items-center justify-center bg-gray-100 mt-20">

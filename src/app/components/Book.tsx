@@ -1,21 +1,26 @@
 "use client";
 
-import Image from "next/image";
-import { BookType } from "../types/type";
-import { useState } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { BookType } from "../types/type";
 
 type BookProps = {
   book: BookType;
-  user: any;
+  user: {
+    id?: string;
+    name?: string;
+    email?: string;
+    image?: string;
+  };
   isPurchased: boolean;
 };
 
 const Book = ({ book, isPurchased }: BookProps) => {
   const [showModal, setShowModal] = useState(false);
   const { data: session } = useSession();
-  const user: any = session?.user;
+  const user = session?.user as BookProps["user"];
   const router = useRouter();
 
   const startCheckout = async () => {
