@@ -1,12 +1,11 @@
 import { getServerSession } from "next-auth";
 import Image from "next/image";
-import { nextAuthOptions } from "../lib/next-auth/options";
-import { User, Purchase, BookType } from "../types/type";
-import { getDetailBook } from "../lib/microcms/client";
 import PurchaseDetailBook from "../components/PurchaseDetailBook";
+import { getDetailBook } from "../lib/microcms/client";
+import { nextAuthOptions } from "../lib/next-auth/options";
+import { BookType, Purchase, User } from "../types/type";
 
 export default async function ProfilePage() {
-  // eslint-disable-next-line @next/next/no-async-client-component
   const session = await getServerSession(nextAuthOptions);
   const user = session?.user as User;
 

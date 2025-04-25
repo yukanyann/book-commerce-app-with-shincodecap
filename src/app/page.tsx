@@ -41,11 +41,11 @@ export default async function Home() {
               user
                 ? {
                     id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    image: user.image,
+                    name: user.name ?? undefined,
+                    email: user.email ?? undefined,
+                    image: user.image ?? undefined,
                   }
-                : undefined
+                : {}
             }
             isPurchased={purchaseBookIds?.includes(book.id)}
           />
