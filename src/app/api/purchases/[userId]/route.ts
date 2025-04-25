@@ -1,9 +1,9 @@
 import prisma from "@/app/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 //購入履歴検索API
 export async function GET(
-  _request: Request,
+  _request: NextRequest,
   { params }: { params: { userId: string } }
 ) {
   const userId = params?.userId;
