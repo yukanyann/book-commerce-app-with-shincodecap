@@ -10,10 +10,15 @@ export async function GET(
 
   try {
     const purchases = await prisma.purchase.findMany({
-      where: { userId: userId },
+      where: { userId },
     });
     return NextResponse.json(purchases);
   } catch (err) {
-    return NextResponse.json(err);
+    console.error(err);
+    // エラーオブジェクトを適切な形式で返す
+    return NextResponse.json(
+      { error: "Failed to fetch purchases" },
+      { status: 500 }
+    );
   }
 }
