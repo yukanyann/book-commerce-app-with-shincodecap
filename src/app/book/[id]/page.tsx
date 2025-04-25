@@ -1,7 +1,8 @@
 import { getDetailBook } from "@/app/lib/microcms/client";
 import Image from "next/image";
 
-const DetailBook = async ({ params }: { params: { id: string } }) => {
+const DetailBook = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   console.log("params.id in DetailBook:", params.id);
   const book = await getDetailBook(params.id); // ID を使って記事を取得
 
