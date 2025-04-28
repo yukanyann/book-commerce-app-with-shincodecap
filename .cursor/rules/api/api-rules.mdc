@@ -1,0 +1,77 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+あなたはTypeScript、Next.js API Routes、OpenAPIのエキスパートです。
+
+API開発規約
+- Next.js App Routerのルーティング構造に従いましょう。
+- APIエンドポイント実装時には常にOpenAPI仕様書（api.yaml）を参照・更新しましょう。
+- APIレスポンスはOpenAPI仕様に厳密に従いましょう。
+- エラーハンドリングは統一的に行い、適切なステータスコードとエラーメッセージを返しましょう。
+
+フォルダ構造とファイル命名
+- すべてのAPIエンドポイントは `/src/app/api/v1/` 内に作成しましょう。
+- 各エンドポイントはフォルダと `route.ts` ファイルで定義しましょう。
+- 各種エンドポイントのファイル名は``で区切るようにしましょう。
+- route.tsファイルはハンドラー関数を呼び出すだけのシンプルな構造にしましょう。
+  ```typescript
+  // 例: src/app/api/v1/client/user/route.ts
+  import { routeHandler } from "@/services/helpers/handlers/routeHandler";
+  import { getHandler } from "./_handlers/getHandler";
+  import { putHandler } from "./_handlers/putHandler";
+
+  export const GET = routeHandler(getHandler);
+  export const PUT = routeHandler(putHandler);
+  ```
+- 実装ロジックは `_handlers` フォルダ内に配置し、HTTP動詞（get, post, put, delete）ごとにファイルを分けましょう：
+  - `getHandler.ts`
+  - `postHandler.ts`
+  - `putHandler.ts`
+  - `deleteHandler.ts`
+- ハンドラーはリクエスト処理とレスポンス生成のみを担当し、ビジネスロジックは分離しましょう。
+
+ビジネスロジックの構造
+- データベースアクセスやビジネスロジックは `/src/services/` フォルダに配置しましょう。
+- クライアント向けAPIは `client` フォルダに、管理者向けAPIは `admin` フォルダに配置しましょう。
+  ```
+  src/services/
+    ├── client/ <- クライアント向けサービス
+    │   └── user/ 
+    │       └── getUser.ts
+    ├── admin/ <- 管理者向けサービス
+    │   └── settings/
+    │       └── updateMaintenanceMode.ts
+    └── helpers/ <- 共通ヘルパー
+  ```
+
+フロントエンド側でのAPI呼び出し
+- フロントエンドからAPIを呼び出す場合は、`/src/utils/apis/` フォルダ内にモジュールを作成しましょう。
+- APIクライアントは自動生成されたOpenAPIクライアントを使用しましょう。
+- 各APIモジュールは機能ごとに分類し、再利用可能な形で実装しましょう。
+- 実装の際には/src/utils/apisの中の実装を確認したのちにそれを元に実装しましょう。
+
+実装規約
+- 型安全性を最大限に確保するためにZodでリクエスト/レスポンスのバリデーションを行いましょう。
+- ビジネスロジックとリクエスト/レスポンスの変換処理は明確に分離しましょう。
+- 共通エラー処理には `routeHandler` を使用しましょう。
+- 認証が必要なエンドポイントには適切な認証ミドルウェアを適用しましょう。
+
+新しいAPIエンドポイント作成時の確認事項
+- api.yamlにエンドポイントの定義が存在するか確認し、なければ追加しましょう。
+- 必要な型定義（スキーマ）がapi.yamlに存在するか確認し、なければ追加しましょう。
+- レスポンス形式がシステム全体で一貫しているか確認しましょう。
+- エンドポイントが適切な認証・認可要件を満たしているか確認しましょう。
+- パフォーマンスと効率性を考慮したデータ取得・処理方法を選択しましょう。
+
+セキュリティに関する注意事項
+- すべてのユーザー入力は適切にバリデーションしましょう。
+- クエリインジェクションなどのセキュリティリスクを考慮した実装をしましょう。
+- 機密情報は安全に扱い、ログやレスポンスに漏れないようにしましょう。
+
+デプロイとテスト
+- 新しいAPIエンドポイントには適切な単体テストと統合テストを実装しましょう。
+- 本番環境へのデプロイ前に手動検証も行いましょう。
+- APIの破壊的変更は避け、バージョニングを適切に行いましょう。
+  

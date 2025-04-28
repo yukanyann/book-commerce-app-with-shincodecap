@@ -13,7 +13,7 @@ function GithubLoginButton({ providerId }: { providerId: string }) {
   return (
     <button
       onClick={() => signIn(providerId, { callbackUrl: "/" })}
-      className="bg-gray-800 text-white font-bold py-2 px-4 rounded flex items-center"
+      className="mx-auto bg-gray-800 text-white font-bold py-2 px-4 rounded flex items-center"
     >
       <FaGithub className="mr-2" />
       Githubでログイン

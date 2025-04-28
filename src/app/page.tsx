@@ -1,5 +1,4 @@
 // "use client";
-
 import { getServerSession } from "next-auth";
 import Book from "./components/Book";
 import { getAllBooks } from "./lib/microcms/client";
@@ -14,17 +13,62 @@ export default async function Home() {
   let purchaseBookIds: string[] = [];
 
   if (user) {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user.id}`,
-      { cache: "no-store" }
-    );
-    const purchasesData = await response.json();
-    console.log(purchasesData);
-    purchaseBookIds = Array.isArray(purchasesData)
-      ? purchasesData.map(
-          (purchaseBook: { bookId: string }) => purchaseBook.bookId
-        )
-      : [];
+    try {
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://localhost:3000";
+
+      const apiUrl = `${baseUrl}/api/purchases/${user.id}`;
+      console.log("User ID:", user.id);
+      console.log("Request URL:", apiUrl);
+
+      const response = await fetch(apiUrl, {
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Response received:", {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+      });
+
+      if (!response.ok) {
+        // レスポンスの内容を直接文字列として取得
+        const rawResponse = await response.text();
+        console.log("Raw error response:", rawResponse);
+
+        const errorInfo = {
+          userId: user.id,
+          requestUrl: apiUrl,
+          status: response.status,
+          statusText: response.statusText,
+          rawResponse: rawResponse,
+        };
+
+        console.error("Detailed API Error:", errorInfo);
+        throw new Error(
+          `API Error: Status ${response.status} - ${
+            rawResponse || "No response body"
+          }`
+        );
+      }
+
+      const purchasesData = await response.json();
+      console.log("Response data:", purchasesData);
+
+      purchaseBookIds = Array.isArray(purchasesData)
+        ? purchasesData.map(
+            (purchaseBook: { bookId: string }) => purchaseBook.bookId
+          )
+        : [];
+    } catch (error) {
+      console.error("Fetch error:", error);
+      purchaseBookIds = [];
+    }
   }
 
   return (
