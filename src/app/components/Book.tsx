@@ -1,5 +1,4 @@
 "use client";
-
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -62,7 +61,7 @@ const Book = ({ book, isPurchased }: BookProps) => {
   const handlePurchaseConfirm = () => {
     if (!user) {
       setShowModal(false);
-      router.push("/api/auth/signin");
+      router.push("/api/auth/");
     } else {
       startCheckout();
     }
