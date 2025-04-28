@@ -10,7 +10,9 @@ export const getAllBooks = async () => {
   const allBooks = await client.getList<BookType>({
     endpoint: "bookcommerce",
     customRequestInit: {
-      cache: "no-store",
+      next: {
+        revalidate: 3600,
+      },
     },
   });
 
@@ -24,6 +26,5 @@ export const getDetailBook = async (contentId: string) => {
 
     contentId,
   });
-
   return detailBook;
 };
