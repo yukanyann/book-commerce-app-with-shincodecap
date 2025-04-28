@@ -9,6 +9,9 @@ export const client = createClient({
 export const getAllBooks = async () => {
   const allBooks = await client.getList<BookType>({
     endpoint: "bookcommerce",
+    customRequestInit: {
+      cache: "no-store",
+    },
   });
 
   return allBooks;
